@@ -1,19 +1,13 @@
 import { Route, Routes } from 'react-router-dom';
-import { HomePage } from '../../pages/home';
-import { DefaultLayout } from '../../pages/_layouts/DefaultLayout';
-import { TextPage } from '../../pages/text';
-import { ResponsePage } from '../../pages/response';
-import { CHAT_PAGE_ROUTE, RESPONSE_PAGE_ROUTE, TEXT_PAGE_ROUTE } from './routes';
-import { ChatPage } from '../../pages/chat/ChatPage';
+import { CHAT_PAGE_ROUTE, TOKEN_PAGE_ROUTE } from './routes';
+import { ChatPage } from '../../pages/chat';
+import { TokenPage } from '../../pages/token';
 
 export const AppRoutes = () => {
   return (
     <Routes>
-      {/*<Route element={<DefaultLayout />}>*/}
+      <Route path={TOKEN_PAGE_ROUTE} element={<TokenPage />} />
       <Route path={CHAT_PAGE_ROUTE} element={<ChatPage />} />
-      {/*<Route path={RESPONSE_PAGE_ROUTE} element={<ResponsePage />} />*/}
-      {/*<Route path={TEXT_PAGE_ROUTE} element={<TextPage />} />*/}
-      {/*</Route>*/}
     </Routes>
   );
 };

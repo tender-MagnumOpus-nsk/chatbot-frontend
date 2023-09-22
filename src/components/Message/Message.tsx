@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import s from './Message.module.scss';
-import {ReactFCC} from '../../utils/ReactFCC';
+import { FC } from 'react';
 
 export enum MessageVariant {
   primary = 'primary',
@@ -18,16 +18,17 @@ export interface MessageProps {
    */
   className?: string;
   variant?: MessageVariant;
-  type: MessageType;
+  type?: MessageType;
+  children?: string;
 }
 
-export const Message: ReactFCC<MessageProps> = (props) => {
-  const { children, className, variant, type } = props;
+export const Message: FC<MessageProps> = (props) => {
+  const { children, className, variant = MessageVariant.primary, type = MessageType.right } = props;
 
   return (
-    <div className={clsx(s.Message, s[`Message_variant_${variant}`], s[`Message_type_${type}`], className)}>
-      {children}
-    </div>
+    <div
+      className={clsx(s.Message, s[`Message_variant_${variant}`], s[`Message_type_${type}`], className)}
+      dangerouslySetInnerHTML={{ __html: children || '' }}
+    />
   );
 };
-

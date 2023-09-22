@@ -1,0 +1,18 @@
+@import 'src/app/styles/vars';
+
+.MessageContainer {
+  width: 100%;
+}
+
+.MessageContainer_variant_primary {
+  background-color: $color-background-primary;
+}
+
+.MessageContainer_variant_secondary {
+  //background-color: $color-background-dark-200;
+}
+
+.MessageContainer__container {
+  @include container;
+  @include flex-col;
+}

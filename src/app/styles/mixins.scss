@@ -218,3 +218,14 @@ $scrollbar-width: 12px;
     display: none; /* for Chrome, Safari, and Opera */
   }
 }
+
+@mixin container {
+  width: 800px;
+  margin: 0 auto;
+
+  @include tablet-down {
+    width: 100%;
+    padding-left: $spacing-small-x;
+    padding-right: $spacing-small-x;
+  }
+}

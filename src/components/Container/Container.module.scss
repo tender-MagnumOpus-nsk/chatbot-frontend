@@ -1,0 +1,5 @@
+@import 'src/app/styles/vars';
+
+.Container {
+  @include container;
+}

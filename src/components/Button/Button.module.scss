@@ -117,7 +117,7 @@ $button-box-shadow-sizes: 0 20px 80px -20px;
 
 .Button_variant_primary {
   background-color: $color-button-primary-default-fill;
-  color: $color-text-quaternary;
+  color: $color-text-invert;
 
   &.Button_hovered,
   &:hover {
@@ -130,8 +130,9 @@ $button-box-shadow-sizes: 0 20px 80px -20px;
   }
 
   &.Button_disabled {
-    //color: $color-text-tertiary;
-    background-color: $color-brand-disabled;
+    color: $color-text-secondary;
+    background-color: transparent;
+    //background-color: $color-brand-disabled;
   }
 }
 
@@ -141,7 +142,6 @@ $button-box-shadow-sizes: 0 20px 80px -20px;
 
   &.Button_hovered,
   &:hover {
-    //box-shadow: #{$button-box-shadow-sizes} $color-background-dark-400;
     background-color: $color-button-secondary-hover-fill;
   }
 

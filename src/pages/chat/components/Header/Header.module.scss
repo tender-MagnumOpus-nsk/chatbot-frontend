@@ -1,5 +1,17 @@
 @import 'src/app/styles/vars';
 
 .Header {
+  @include flex-between;
+  padding-top: $spacing-small-x;
+  padding-bottom: $spacing-small-x;
+}
 
+.Header__link {
+  @include link-reset;
+  cursor: pointer;
+}
+
+.Header__logo {
+  height: 36px;
+  width: auto;
 }

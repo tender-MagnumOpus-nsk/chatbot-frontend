@@ -6,6 +6,7 @@
 
   position: relative;
   display: flex;
+  flex-direction: row;
   align-items: center;
   padding: 15px $spacing-small-x;
   color: $color-text-primary;
@@ -15,7 +16,6 @@
   background-color: $color-background-primary;
   cursor: text;
   box-sizing: border-box;
-
   overflow-y: auto;
   word-wrap: break-word;
 
@@ -46,13 +46,13 @@
 .Input__input {
   @include reset-default-input;
   @include remove-autofill-style;
+  @include hide-scrollbar;
 
   position: relative;
   flex-grow: 1;
   min-width: 0;
   height: 100%;
-
-  //resize: none;
+  resize: none;
   //white-space: break-spaces;
 
   &:placeholder-shown + .Input__clear {
@@ -132,4 +132,8 @@
 
 .Input_disabled .Input__icon_clear {
   pointer-events: none;
+}
+
+.Input__right {
+
 }

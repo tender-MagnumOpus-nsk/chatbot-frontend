@@ -10,10 +10,13 @@
 // синий
 $color-text: #010819;
 //$color-background: #e6edfe;
-$color-background: #fafafa;
-$color-primary: #0647e0;
-$color-secondary: #cddcfe;
-$color-accent: #064ff9;
+//$color-background: #fafafa;
+$color-background: #ffffff;
+$color-primary: #e44d2e;
+//$color-primary: #0647e0;;
+$color-secondary: #e7e5e4;
+$color-accent: #db2b21;
+//$color-accent: #064ff9;
 
 // сине-пастельный
 //$color-text: #130e07;
@@ -31,12 +34,14 @@ $color-accent: #064ff9;
 
 $color-background-primary: $color-background;
 $color-background-secondary: $color-secondary;
+$color-background-tertiary: lighten(invert($color-background), 20%);
 $color-background-dark-100: darken($color-background, 3%);
 $color-background-dark-200: darken($color-background, 6%);
 $color-background-dark-300: darken($color-background, 12%);
 $color-background-dark-400: darken($color-background, 24%);
 $color-background-dark-500: darken($color-background, 48%);
-$color-background-accent: $color-accent;
+
+$color-background-accent: $color-primary;
 $color-background-accent-100: color.adjust($color-accent, $saturation: -40%, $lightness: 40%);
 $color-background-accent-200: color.adjust($color-accent, $saturation: -30%, $lightness: 30%);
 $color-background-accent-300: color.adjust($color-accent, $saturation: -20%, $lightness: 20%);
@@ -46,7 +51,7 @@ $color-background-accent-500: $color-background-accent;
 $color-text-primary: $color-text;
 $color-text-secondary: darken($color-background, 40%);
 $color-text-tertiary: darken($color-background, 60%);
-$color-text-quaternary: $color-background;
+$color-text-invert: $color-background;
 $color-text-brand: $color-primary;
 $color-text-disabled: color.adjust($color-text, $lightness: 40%);
 

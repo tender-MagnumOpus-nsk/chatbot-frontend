@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { ReactNode, useEffect, useRef } from 'react';
 import clsx from 'clsx';
 import composeRefs from '@seznam/compose-react-refs';
 import s from './Textarea.module.scss';
@@ -19,7 +19,7 @@ export interface TextAreaProps extends Omit<IntrinsicPropsWithoutRef<'textarea'>
   /**
    * Ref на input-элемент
    */
-  inputRef?: React.Ref<HTMLInputElement>;
+  inputRef?: React.Ref<HTMLTextAreaElement>;
   /**
    * Обработчик нажатия на Input
    */
@@ -40,6 +40,8 @@ export interface TextAreaProps extends Omit<IntrinsicPropsWithoutRef<'textarea'>
     input?: string;
   };
   registration?: Partial<UseFormRegisterReturn>;
+
+  right?: ReactNode | string;
 }
 
 export type InputType = React.ForwardRefExoticComponent<TextAreaProps & React.RefAttributes<HTMLDivElement>>;
@@ -56,6 +58,8 @@ const TextareaForwardedRef = React.forwardRef<HTMLDivElement, TextAreaProps>(
       inputRef: inputRefProp,
       style,
       registration,
+      right,
+      value,
       ...inputProps
     },
     ref
@@ -69,6 +73,13 @@ const TextareaForwardedRef = React.forwardRef<HTMLDivElement, TextAreaProps>(
       inputRef.current.style.height = '1px';
       inputRef.current.style.height = inputRef.current.scrollHeight + 'px';
     }
+
+    useEffect(() => {
+      if (inputRef.current) {
+        inputRef.current.style.height = '1px';
+        inputRef.current.style.height = inputRef.current.scrollHeight + 'px';
+      }
+    }, [value]);
 
     return (
       <div
@@ -95,14 +106,16 @@ const TextareaForwardedRef = React.forwardRef<HTMLDivElement, TextAreaProps>(
           {...focusProps}
           // @ts-ignore
           onInput={(e) => {
-            setTimeout(() => {
-              if (inputRef.current) {
-                inputRef.current.style.height = '1px';
-                inputRef.current.style.height = inputRef.current.scrollHeight + 'px';
-              }
-            });
+            if (inputRef.current) {
+              inputRef.current.style.height = '1px';
+              inputRef.current.style.height = inputRef.current.scrollHeight + 'px';
+            }
+            setTimeout(() => {});
           }}
+          value={value}
         />
+
+        {right}
       </div>
     );
   }
