@@ -1,0 +1,159 @@
+@import 'src/app/styles/vars';
+
+.TextPage {
+  @include flex-col;
+  padding-bottom: $spacing-medium-x;
+  height: 100%;
+}
+
+.TextPage__container {
+  width: 100%;
+}
+
+.TextPage__title {
+  margin-bottom: $spacing-small-x;
+}
+
+.TextPage__props {
+  @include flex-col;
+  row-gap: $spacing-small-3x;
+  margin-bottom: $spacing-small;
+}
+
+.TextPage__prop {
+  font-size: $font-size-14;
+  line-height: $line-height-20;
+}
+
+.TextPage__prop_total {
+  font-size: $font-size-16;
+  line-height: $line-height-24;
+  font-weight: $font-weight-600;
+}
+
+.TextPage__tooltip {
+  display: inline-block;
+}
+
+.TextPage__underline {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.TextPage__summary {
+  margin-bottom: $spacing-small;
+}
+
+.TextPage__summaryHeading {
+  margin-bottom: $spacing-small-x;
+}
+
+.TextPage__summaryText {
+}
+
+.TextPage__summaryLink {
+  display: block;
+  margin-bottom: $spacing-small-4x;
+  width: fit-content;
+
+  &:last-of-type {
+    margin-bottom: $spacing-small-x;
+  }
+}
+
+.TextPage__full {
+}
+
+.TextPage__fullHeading {
+  margin-bottom: $spacing-small-x;
+}
+
+.TextPage__fullText {
+  @include text-body-m-regular;
+  line-height: $line-height-24;
+
+  @include mobile-up {
+    border: 1px solid $color-border-default;
+    padding: $spacing-medium $spacing-small;
+    border-radius: $radius-small;
+  }
+
+  @include mobile-down {
+    border-top: 1px solid $color-border-default;
+    border-bottom: 1px solid $color-border-default;
+    padding: $spacing-small-x 0;
+  }
+}
+
+.TextPage__tag {
+  display: inline-block;
+  background-color: #efe1ae;
+  padding: 0 2px;
+  margin: 0 -2px;
+}
+
+.TextPage__selectLabel {
+  margin-bottom: $spacing-small-4x;
+}
+
+.TextPage__select {
+  @include reset-default-input;
+
+  padding: 0 ($spacing-small-2x - 1px);
+  color: $color-text-primary;
+  border: 1px solid $color-border-default;
+  border-radius: $radius-medium-x;
+  box-sizing: border-box;
+  height: 32px;
+  min-width: 200px;
+  margin-bottom: $spacing-small-x;
+
+  @include mobile-down {
+    width: 100%;
+  }
+}
+
+.TextPage__textTip {
+  @include transition(opacity);
+  @include text-body-s-regular;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  opacity: 0;
+  padding: 8px 12px;
+  border-radius: $radius-medium;
+  background-color: rgba($color-text-primary, 0.8);
+  color: $color-background-primary;
+}
+
+.TextPage__loaderContainer {
+  @include flex-col-middle;
+  justify-content: center;
+  row-gap: $spacing-small-4x;
+  height: 100%;
+}
+
+.TextPage__loader {
+  --loader-size: 96px;
+  color: $color-background-secondary !important;
+}
+
+.TextPage__modalBody {
+  @include flex-col;
+  line-height: $line-height-24;
+}
+
+.TextPage__modalParagraph {
+  margin-top: $spacing-small-3x;
+  padding-top: $spacing-small-3x;
+  border-top: 1px solid $color-divider-darker;
+}
+
+:global {
+  .detailedText {
+    margin-bottom: 8px;
+    cursor: pointer;
+  }
+}
