@@ -158,6 +158,8 @@
 
 .ChatPage__hint {
   overflow: hidden;
+  padding-left: $spacing-small-x - 1px !important;
+  padding-right: $spacing-small-x - 1px !important;
 }
 
 .ChatPage__hintText {
