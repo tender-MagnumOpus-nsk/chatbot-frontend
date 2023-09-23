@@ -5,6 +5,14 @@
   border-radius: $radius-large-x !important;
 }
 
+.ChatInput__container {
+  position: relative;
+}
+
+.ChatInput__container_hasHints {
+  background-color: $color-background-primary;
+}
+
 .ChatInput__input {
 }
 
@@ -19,4 +27,38 @@
 .ChatInput__icon {
   width: 16px;
   height: 16px;
+}
+
+.ChatInput__dropdown {
+  position: absolute;
+  border-radius: $radius-large $radius-large 0 0;
+  background-color: $color-background-primary;
+  width: 100%;
+  top: 0;
+  transform: translateY(calc(-100% + 16px));
+  box-shadow: 0 0 15px rgba(0,0,0,.1);
+  border: 1px solid $color-background-secondary;
+  padding: 12px 0 28px;
+  z-index: -1;
+}
+
+.ChatInput__dropdownItem {
+  @include reset-button;
+  @include transition(background-color);
+  display: block;
+  width: 100%;
+  padding: 6px 12px;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+
+  &:hover {
+    background-color: $color-button-secondary-hover-fill;
+  }
+
+  &:active {
+    background-color: $color-button-secondary-pressed-fill;
+  }
 }

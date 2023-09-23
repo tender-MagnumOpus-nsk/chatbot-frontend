@@ -1,11 +1,11 @@
 @import 'src/app/styles/vars';
 
-$button-border-width: 2px;
+$button-border-width: 1px;
 $button-box-shadow-sizes: 0 20px 80px -20px;
 
 .Button {
   @include text-body-m-regular;
-  @include transition(box-shadow, transform, border-color, background-color);
+  @include transition(box-shadow, transform, border-color, background-color, color);
 
   position: relative;
   display: flex;
@@ -15,7 +15,7 @@ $button-box-shadow-sizes: 0 20px 80px -20px;
   text-decoration: none;
   color: $color-text-secondary;
   border: $button-border-width solid transparent;
-  border-radius: $radius-medium-x;
+  border-radius: $radius-medium;
   background-color: rgb(255 255 255 / 0%);
   box-shadow: none;
   user-select: none;
@@ -137,16 +137,38 @@ $button-box-shadow-sizes: 0 20px 80px -20px;
 }
 
 .Button_variant_secondary {
-  background-color: $color-button-secondary-default-fill;
-  color: $color-text-brand;
+  border-color: $color-button-secondary-default-fill;
+  color: $color-text-primary;
 
   &.Button_hovered,
   &:hover {
     background-color: $color-button-secondary-hover-fill;
+    border-color: $color-button-secondary-hover-fill;
   }
 
   &:active {
     background-color: $color-button-secondary-pressed-fill;
+  }
+
+  &.Button_disabled {
+    color: $color-text-tertiary;
+  }
+}
+
+.Button_variant_tertiary {
+  border-color: $color-button-primary-default-fill;
+  color: $color-brand-primary;
+
+  &.Button_hovered,
+  &:hover {
+    background-color: $color-button-primary-hover-fill;
+    border-color: $color-button-primary-hover-fill;
+    color: $color-text-invert;
+  }
+
+  &:active {
+    border-color: $color-button-primary-pressed-fill;
+    background-color: $color-button-primary-pressed-fill;
   }
 
   &.Button_disabled {

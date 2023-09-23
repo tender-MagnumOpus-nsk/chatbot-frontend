@@ -1,9 +1,10 @@
 import { useSocket } from '../socket';
 import { WS_URL } from '../../../config';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export interface UseChatProps {
   token: string | null;
+  initialMessages?: IMessage[];
 }
 
 export enum MessageType {
@@ -20,24 +21,34 @@ export type IMessage =
   | {
       type: MessageType.me;
       text: string;
-      // [key: string]: any | undefined;
     }
   | {
       type: MessageType.them;
-      data: IAnswer[];
+      text?: string;
+      data?: IAnswer[];
+      hints?: string[];
     };
 
 export type ChatResponse = Omit<IMessage, 'type'>;
 
 export const useChat = (props: UseChatProps) => {
-  const { token } = props;
+  const { token, initialMessages = [] } = props;
 
   const [messages, setMessages] = useState<IMessage[]>([]);
+
+  useEffect(() => {
+    if (initialMessages) {
+      setTimeout(() => {
+        setMessages(initialMessages);
+      }, 500);
+    }
+  }, []);
 
   const { sendMessage: sendSocketMessage } = useSocket({
     url: token ? WS_URL + '/messages/' + token : '',
     enabled: !!token,
     onMessage: (data: ChatResponse) => {
+      console.log(data);
       const message = { ...data, type: MessageType.them } as IMessage;
       setMessages((messages) => [...messages, message]);
     },

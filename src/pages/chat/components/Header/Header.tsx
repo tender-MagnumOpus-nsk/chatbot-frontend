@@ -4,7 +4,7 @@ import { ReactFCC } from '../../../../utils/ReactFCC';
 import mopusLogoSrc from './assets/mopus-logo.svg';
 import portalLogoSrc from './assets/portal-logo.svg';
 import { Link } from 'react-router-dom';
-import { CHAT_PAGE_ROUTE } from '../../../../app/routes';
+import { CHAT_PAGE_ROUTE, TOKEN_PAGE_ROUTE } from '../../../../app/routes';
 
 export interface HeaderProps {
   /**
@@ -22,7 +22,7 @@ export const Header: ReactFCC<HeaderProps> = (props) => {
         <img className={clsx(s.Header__logo)} src={portalLogoSrc} alt={''} />
       </a>
 
-      <Link className={s.Header__link} to={'.'}>
+      <Link className={s.Header__link} to={TOKEN_PAGE_ROUTE} reloadDocument>
         <img className={clsx(s.Header__logo)} src={mopusLogoSrc} alt={''} />
       </Link>
     </div>

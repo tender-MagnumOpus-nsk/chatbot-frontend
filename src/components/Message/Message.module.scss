@@ -4,6 +4,7 @@ $message-radius: $radius-large-xx;
 
 .Message {
   @include text-body-m-regular;
+  @include transition(transform, opacity);
 
   border-radius: 1.15rem;
   line-height: 1.25;
@@ -12,7 +13,10 @@ $message-radius: $radius-large-xx;
   padding: 0.5rem .875rem;
   position: relative;
   word-wrap: break-word;
-  //margin: 0.5rem 0;
+  //transform: scale(0.95);
+  //opacity: 0;
+  //transition-duration: 0.2s;
+  //transition-timing-function: ease;
 
   &::after,
   &::before {
@@ -27,8 +31,14 @@ $message-radius: $radius-large-xx;
   }
 }
 
+.Message_mounted {
+  transform: scale(1);
+  opacity: 1;
+}
+
 .Message_type_right {
   margin-left: auto;
+  transform-origin: right bottom;
 
   &::before {
     border-bottom-left-radius: 0.8rem 0.7rem;
@@ -43,17 +53,11 @@ $message-radius: $radius-large-xx;
     transform:translate(-30px, -2px);
     width: 10px;
   }
-
-  & ~ & {
-    //margin: 0.25rem 0 0;
-  }
-
-  & ~ &:last-child {
-    //margin-bottom: 0.5rem;
-  }
 }
 
 .Message_type_left {
+  transform-origin: left bottom;
+
   &::before {
     border-bottom-right-radius: 0.8rem 0.7rem;
     border-left: 1rem solid transparent;
@@ -66,14 +70,6 @@ $message-radius: $radius-large-xx;
     left: 20px;
     transform: translate(-30px, -2px);
     width: 10px;
-  }
-
-  & ~ & {
-    //margin: 0.25rem 0 0;
-  }
-
-  & ~ &:last-child {
-    //margin-bottom: 0.5rem;
   }
 }
 

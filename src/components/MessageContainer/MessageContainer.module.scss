@@ -2,6 +2,25 @@
 
 .MessageContainer {
   width: 100%;
+
+  @include transition(transform, opacity);
+  transform: scale(0.95);
+  opacity: 0;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+}
+
+.MessageContainer_right {
+  transform-origin: right bottom;
+}
+
+.MessageContainer_left {
+  transform-origin: left bottom;
+}
+
+.MessageContainer_mounted {
+  transform: scale(1);
+  opacity: 1;
 }
 
 .MessageContainer_variant_primary {

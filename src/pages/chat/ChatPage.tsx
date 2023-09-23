@@ -1,3 +1,4 @@
+import { MouseEvent } from 'react';
 import s from './ChatPage.module.scss';
 import { ReactFCC } from '../../utils/ReactFCC';
 import { Header } from './components';
@@ -10,6 +11,7 @@ import { Container } from '../../components/Container';
 import { useUrlParam } from '../../hooks/useUrlParam';
 import { CHAT_PAGE_PARAM } from '../../app/routes';
 import { MessageType, useChat } from './hooks';
+import { Button, ButtonSize, ButtonVariant } from '../../components/Button';
 
 const normalizeText = (rawText: string) => {
   const text = rawText.replaceAll(/(\n ?)/gm, '<br />').replaceAll(/(<br \/>[  ]?){2,}/gm, '<br /><br />');
@@ -22,7 +24,24 @@ export const ChatPage: ReactFCC = () => {
   const [value, setValue] = useState('');
 
   const { messages, sendMessage } = useChat({
-    token
+    token,
+    initialMessages: [
+      {
+        type: MessageType.them,
+        text: `Здравствуйте! <br /> Сотрудники службы информационной поддержки Портала поставщиков ответят на вопросы о работе системы, окажут помощь в получении и поиске информации на портале.`
+      },
+      {
+        type: MessageType.them,
+        text: `Выберите, пожалуйста, тему обращения:`,
+        hints: [
+          'Страница контракта организации',
+          'Регистрация на портале',
+          'Участие в котировочной сессии',
+          'Подобрать товары',
+          'Добавить товары в Каталог'
+        ]
+      }
+    ]
   });
 
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
@@ -38,8 +57,8 @@ export const ChatPage: ReactFCC = () => {
     inputRef.current?.focus();
   }, []);
 
-  const onSubmit = () => {
-    const normalizedValue = value.trim();
+  const onSubmit = (val = value) => {
+    const normalizedValue = val.trim();
 
     if (normalizedValue === '') {
       return;
@@ -63,45 +82,35 @@ export const ChatPage: ReactFCC = () => {
                 [s.ChatPage__messageContainer_right]: message.type === MessageType.me,
                 [s.ChatPage__messageContainer_left]: message.type === MessageType.them
               })}
+              type={message.type === MessageType.me ? MessageComponentType.right : MessageComponentType.left}
               key={index}>
               <Message
                 className={s.ChatPage__message}
                 variant={message.type === MessageType.me ? MessageVariant.primary : MessageVariant.secondary}
                 type={message.type === MessageType.me ? MessageComponentType.right : MessageComponentType.left}>
-                {message.type === MessageType.me ? message.text : normalizeText(message.data[0]?.answer)}
+                {message.type === MessageType.me
+                  ? message.text
+                  : message.text ?? normalizeText(message.data?.[0]?.answer || '')}
               </Message>
+
+              {message.type === MessageType.them && message.hints && message.hints.length !== 0 && (
+                <div className={s.ChatPage__hintContainer}>
+                  {message.hints.map((hint, index) => (
+                    <Button
+                      variant={ButtonVariant.tertiary}
+                      size={ButtonSize.small_x}
+                      key={index}
+                      onClick={(e: MouseEvent) => {
+                        e.preventDefault();
+                        onSubmit(hint);
+                      }}>
+                      {hint}
+                    </Button>
+                  ))}
+                </div>
+              )}
             </MessageContainer>
           ))}
-
-          {/*<MessageContainer className={clsx(s.ChatPage__messageContainer_right)}>*/}
-          {/*  <Message className={s.ChatPage__message} variant={MessageVariant.primary} type={MessageType.right}>*/}
-          {/*    Страница контракта организации*/}
-          {/*  </Message>*/}
-          {/*</MessageContainer>*/}
-
-          {/*<MessageContainer className={clsx(s.ChatPage__messageContainer_right)}>*/}
-          {/*  <Message className={s.ChatPage__message} variant={MessageVariant.primary} type={MessageType.right}>*/}
-          {/*    Страница контракта организации*/}
-          {/*  </Message>*/}
-          {/*</MessageContainer>*/}
-
-          {/*<MessageContainer className={clsx(s.ChatPage__messageContainer_left)}>*/}
-          {/*  <Message className={s.ChatPage__message} variant={MessageVariant.secondary} type={MessageType.left}>*/}
-          {/*    {text.replaceAll('\\n', '<br />').replaceAll('\\"', '"')}*/}
-          {/*  </Message>*/}
-          {/*</MessageContainer>*/}
-
-          {/*<MessageContainer className={clsx(s.ChatPage__messageContainer_left)}>*/}
-          {/*  <Message className={s.ChatPage__message} variant={MessageVariant.secondary} type={MessageType.left}>*/}
-          {/*    hello world*/}
-          {/*  </Message>*/}
-          {/*</MessageContainer>*/}
-
-          {/*<MessageContainer className={clsx(s.ChatPage__messageContainer_right)}>*/}
-          {/*  <Message className={s.ChatPage__message} variant={MessageVariant.primary} type={MessageType.right}>*/}
-          {/*    Страница контракта организации*/}
-          {/*  </Message>*/}
-          {/*</MessageContainer>*/}
         </div>
       </div>
 
@@ -113,6 +122,8 @@ export const ChatPage: ReactFCC = () => {
             onSubmit={onSubmit}
             inputRef={inputRef}
             buttonDisabled={value === ''}
+            inputHints={['Страница контракта организации']}
+            onClickHint={(hint) => onSubmit(hint)}
           />
         </Container>
       </div>
