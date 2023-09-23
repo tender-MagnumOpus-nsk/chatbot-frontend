@@ -55,7 +55,7 @@
     margin-top: 8px;
   }
 
-  &:not(:has(+ .ChatPage__messageContainer_left)):not(:last-child) {
+  &:not(:has(+ .ChatPage__messageContainer_left), :last-child) {
     .ChatPage__message::after, .ChatPage__message::before {
       display: none;
     }
@@ -71,7 +71,7 @@
     margin-top: 8px;
   }
 
-  &:not(:has(+ .ChatPage__messageContainer_right)):not(:last-child) {
+  &:not(:has(+ .ChatPage__messageContainer_right), :last-child) {
     .ChatPage__message::after, .ChatPage__message::before {
       display: none;
     }

@@ -16,13 +16,19 @@ export interface MessageContainerProps {
   className?: string;
   variant?: MessageContainerVariant;
   placement?: MessagePlacement;
+  loaded?: boolean;
 }
 
 export const MessageContainer: ReactFCC<MessageContainerProps> = (props) => {
-  const { children, className, variant = MessageContainerVariant.primary, placement = MessagePlacement.right } = props;
+  const {
+    children,
+    className,
+    variant = MessageContainerVariant.primary,
+    placement = MessagePlacement.right,
+    loaded = false
+  } = props;
 
-  const [mounted, setMounted] = useState(false);
-
+  const [mounted, setMounted] = useState(!loaded);
   useEffect(() => {
     setMounted(true);
   }, []);

@@ -13,15 +13,11 @@ $message-radius: $radius-large-xx;
   padding: 0.5rem .875rem;
   position: relative;
   word-wrap: break-word;
-  //transform: scale(0.95);
-  //opacity: 0;
-  //transition-duration: 0.2s;
-  //transition-timing-function: ease;
 
   &::after,
   &::before {
     bottom: -0.1rem;
-    content: "";
+    content: " ";
     height: 1rem;
     position: absolute;
   }
@@ -29,11 +25,6 @@ $message-radius: $radius-large-xx;
   @include mobile-down {
     max-width: 100%;
   }
-}
-
-.Message_mounted {
-  transform: scale(1);
-  opacity: 1;
 }
 
 .Message_type_right {

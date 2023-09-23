@@ -1,4 +1,6 @@
-export type ChatResponse = Omit<IMessage, 'type'>;
+export type ChatResponse = {
+  data?: IAnswer[];
+};
 
 export enum MessageType {
   me = 'me',

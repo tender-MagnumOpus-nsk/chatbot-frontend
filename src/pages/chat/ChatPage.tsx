@@ -4,7 +4,7 @@ import { ReactFCC } from '../../utils/ReactFCC';
 import { Header } from './components';
 import clsx from 'clsx';
 import { ChatInput } from './components/ChatInput';
-import { Message, MessagePlacement as MessageComponentType, MessageVariant } from '../../components/Message';
+import { Message, MessagePlacement, MessageVariant } from '../../components/Message';
 import { MessageContainer } from '../../components/MessageContainer';
 import { Container } from '../../components/Container';
 import { useUrlParam } from '../../hooks/useUrlParam';
@@ -13,6 +13,7 @@ import { useChat } from './hooks';
 import { Button, ButtonSize, ButtonVariant } from '../../components/Button';
 import { useSingleTimeout } from '../../hooks/useSingleTimeout';
 import { MessageType } from '../../api/chat/types';
+import { usePrevious } from '../../hooks/usePrevious';
 
 const normalizeText = (rawText: string) => {
   return rawText
@@ -35,18 +36,21 @@ export const ChatPage: ReactFCC = () => {
         type: MessageType.them,
         text: `Здравствуйте! <br /> Сотрудники службы информационной поддержки Портала поставщиков ответят на вопросы о работе системы, окажут помощь в получении и поиске информации на портале.`,
         active: 0
+      },
+      {
+        type: MessageType.them,
+        text: `Выберите, пожалуйста, тему обращения:`,
+        active: 0,
+        hints: [
+          'Как определяется победитель тендера',
+          'Как создать оферту',
+          'Как найти товар',
+          'Сколько по времени идет котировочная сессия',
+          'Срок продолжительности котировочной сессии',
+          'Как вернуть оферту из архива?',
+          'Требования к рабочему месту пользователя уполномоченного органа'
+        ]
       }
-      // {
-      //   type: MessageType.them,
-      //   text: `Выберите, пожалуйста, тему обращения:`,
-      //   hints: [
-      //     'Страница контракта организации',
-      //     'Регистрация на портале',
-      //     'Участие в котировочной сессии',
-      //     'Подобрать товары',
-      //     'Добавить товары в Каталог'
-      //   ]
-      // }
     ]
   });
 
@@ -106,6 +110,14 @@ export const ChatPage: ReactFCC = () => {
     inputRef.current?.focus();
   }, []);
 
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    if (messages.length !== 0 && !loaded) {
+      setLoaded(true);
+      window.scrollTo(0, document.body.scrollHeight);
+    }
+  }, [messages, loaded]);
+
   const onSubmit = (val = value) => {
     const normalizedValue = val.trim();
 
@@ -162,35 +174,36 @@ export const ChatPage: ReactFCC = () => {
                     [s.ChatPage__messageContainer_right]: message.type === MessageType.me,
                     [s.ChatPage__messageContainer_left]: message.type === MessageType.them
                   })}
-                  placement={message.type === MessageType.me ? MessageComponentType.right : MessageComponentType.left}
+                  placement={message.type === MessageType.me ? MessagePlacement.right : MessagePlacement.left}
+                  loaded={loaded}
                   key={messageIndex}>
                   <Message
                     className={s.ChatPage__message}
                     variant={message.type === MessageType.me ? MessageVariant.primary : MessageVariant.secondary}
-                    placement={message.type === MessageType.me ? MessageComponentType.right : MessageComponentType.left}
+                    placement={message.type === MessageType.me ? MessagePlacement.right : MessagePlacement.left}
                     title={normalizeText(title)}>
                     {normalizeText(text)}
                   </Message>
 
-                  {/*{message.type === MessageType.them && message.hints && message.hints.length !== 0 && (*/}
-                  {/*  <div className={s.ChatPage__hintContainer}>*/}
-                  {/*    {message.hints.map((hint, index) => (*/}
-                  {/*      <Button*/}
-                  {/*        className={s.ChatPage__hint}*/}
-                  {/*        classes={{ text: s.ChatPage__hintText }}*/}
-                  {/*        variant={ButtonVariant.tertiary}*/}
-                  {/*        size={ButtonSize.small_x}*/}
-                  {/*        key={index}*/}
-                  {/*        onClick={(e: MouseEvent) => {*/}
-                  {/*          e.preventDefault();*/}
-                  {/*          onSubmit(hint);*/}
-                  {/*        }}*/}
-                  {/*        disabled={messageIndex !== length - 1}>*/}
-                  {/*        {hint}*/}
-                  {/*      </Button>*/}
-                  {/*    ))}*/}
-                  {/*  </div>*/}
-                  {/*)}*/}
+                  {message.type === MessageType.them && message.hints && message.hints.length !== 0 && (
+                    <div className={s.ChatPage__hintContainer}>
+                      {message.hints.map((hint, index) => (
+                        <Button
+                          className={s.ChatPage__hint}
+                          classes={{ text: s.ChatPage__hintText }}
+                          variant={ButtonVariant.tertiary}
+                          size={ButtonSize.small_x}
+                          key={index}
+                          onClick={(e: MouseEvent) => {
+                            e.preventDefault();
+                            onSubmit(hint);
+                          }}
+                          disabled={messageIndex !== length - 1}>
+                          {hint}
+                        </Button>
+                      ))}
+                    </div>
+                  )}
 
                   {message.type === MessageType.them && hints.length !== 0 && messageIndex === length - 1 && (
                     <div className={s.ChatPage__hintContainer}>
@@ -221,9 +234,8 @@ export const ChatPage: ReactFCC = () => {
               )
             );
           })}
-
-          <div className={s.ChatPage__textTip} ref={tipRef} />
         </div>
+        <div className={s.ChatPage__textTip} ref={tipRef} />
       </div>
 
       <div className={s.ChatPage__formOuter}>
