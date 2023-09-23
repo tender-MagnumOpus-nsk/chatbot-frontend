@@ -159,8 +159,8 @@ $button-box-shadow-sizes: 0 20px 80px -20px;
   border-color: $color-button-primary-default-fill;
   color: $color-brand-primary;
 
-  &.Button_hovered,
-  &:hover {
+  &.Button_hovered:not(.Button_disabled, :active),
+  &:hover:not(.Button_disabled, :active) {
     background-color: $color-button-primary-hover-fill;
     border-color: $color-button-primary-hover-fill;
     color: $color-text-invert;
@@ -169,6 +169,7 @@ $button-box-shadow-sizes: 0 20px 80px -20px;
   &:active {
     border-color: $color-button-primary-pressed-fill;
     background-color: $color-button-primary-pressed-fill;
+    color: $color-text-invert;
   }
 
   &.Button_disabled {
