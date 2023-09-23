@@ -13,6 +13,7 @@ import { useChat } from './hooks';
 import { Button, ButtonSize, ButtonVariant } from '../../components/Button';
 import { useSingleTimeout } from '../../hooks/useSingleTimeout';
 import { MessageType } from '../../api/chat/types';
+import { BACKEND_URL } from '../../config';
 
 const normalizeText = (rawText: string, keepNewline = true) => {
   return rawText
@@ -209,27 +210,45 @@ export const ChatPage: ReactFCC = () => {
 
                   {message.type === MessageType.them && hints.length !== 0 && messageIndex === length - 1 && (
                     <div className={s.ChatPage__hintContainer}>
-                      {hints.map((hint, index) => (
-                        <Button
-                          className={s.ChatPage__hint}
-                          classes={{ text: s.ChatPage__hintText }}
-                          variant={index === message.active ? ButtonVariant.primary : ButtonVariant.tertiary}
-                          size={ButtonSize.small_x}
-                          key={index}
-                          onClick={(e: MouseEvent) => {
-                            e.preventDefault();
-                            const messageIndex = messages.findIndex((i) => i === message);
-                            setMessages((msgs) => [
-                              ...msgs.slice(0, messageIndex),
-                              { ...message, active: index },
-                              ...msgs.slice(messageIndex + 1)
-                            ]);
-                          }}
-                          disabled={messageIndex !== length - 1 || index === message.active}
-                          title={hint}>
-                          {normalizeText(hint.length > 100 ? hint.slice(0, 100) + '...' : hint, false)}
-                        </Button>
-                      ))}
+                      {hints.map((hint, index) => {
+                        const file = message.data?.[index];
+                        const isFile = file?.type === 'file';
+
+                        return (
+                          <Button
+                            component={isFile ? 'a' : undefined}
+                            {...(isFile
+                              ? {
+                                  href: BACKEND_URL + file?.file,
+                                  download: file?.title + '.pdf',
+                                  target: '_black'
+                                }
+                              : {})}
+                            className={s.ChatPage__hint}
+                            classes={{ text: s.ChatPage__hintText }}
+                            variant={index === message.active ? ButtonVariant.primary : ButtonVariant.tertiary}
+                            size={ButtonSize.small_x}
+                            key={index}
+                            onClick={(e: MouseEvent) => {
+                              if (!isFile) {
+                                e.preventDefault();
+                                const messageIndex = messages.findIndex((i) => i === message);
+                                setMessages((msgs) => [
+                                  ...msgs.slice(0, messageIndex),
+                                  { ...message, active: index },
+                                  ...msgs.slice(messageIndex + 1)
+                                ]);
+                              }
+                            }}
+                            disabled={messageIndex !== length - 1 || index === message.active}
+                            title={hint}>
+                            {normalizeText(
+                              (isFile ? '[PDF] ' : '') + (hint.length > 100 ? hint.slice(0, 100) + '...' : hint),
+                              false
+                            )}
+                          </Button>
+                        );
+                      })}
                     </div>
                   )}
                 </MessageContainer>

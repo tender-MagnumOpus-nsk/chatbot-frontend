@@ -14,6 +14,8 @@ export interface IAnswer {
   score: number;
   entry: number;
   entry_ends: number;
+  type?: 'file';
+  file?: string;
 }
 
 export type IMessage =
