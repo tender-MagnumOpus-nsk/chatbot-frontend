@@ -23,6 +23,7 @@ export const useSocket = (props: UseSocketProps) => {
   const { url, enabled, onSendMessage, onMessage } = props;
 
   const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [state, setState] = useSetState<UseSocketState>({
     readyState: WebSocket.CONNECTING,
     error: null,
@@ -35,9 +36,20 @@ export const useSocket = (props: UseSocketProps) => {
   useEffect(() => {
     if (enabled) {
       ws.current = new WebSocket(url);
-      ws.current!.onopen = () => setState({ readyState: WebSocket.OPEN });
-      ws.current!.onclose = () => setState({ readyState: WebSocket.CLOSED });
-      ws.current!.onerror = (event) => setState({ error: event });
+      ws.current!.onopen = () => {
+        setState({ readyState: WebSocket.OPEN });
+        console.log('Socket connection has been opened');
+      };
+      ws.current!.onclose = () => {
+        setState({ readyState: WebSocket.CLOSED });
+        console.log('Socket connection has been closed, try to reconnect');
+        ws.current = new WebSocket(url);
+      };
+      ws.current!.onerror = (event) => {
+        setState({ error: event });
+        setIsLoading(false);
+        console.error('Socket error:', event);
+      };
       ws.current!.onmessage = handleMessage;
     }
 
@@ -61,6 +73,7 @@ export const useSocket = (props: UseSocketProps) => {
       const data = typeof payload === 'string' ? payload : JSON.stringify(payload);
       client?.send(data);
       onSendMessage?.(payload);
+      setIsLoading(true);
     },
     [client]
   );
@@ -69,10 +82,12 @@ export const useSocket = (props: UseSocketProps) => {
     const data = tryParseJson(event.data) ?? '';
     setMessage(event.data);
     onMessage?.(data);
+    setIsLoading(false);
   }, []);
 
   return {
     ...state,
+    isLoading,
     sendMessage
   };
 };

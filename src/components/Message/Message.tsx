@@ -17,6 +17,9 @@ export interface MessageProps {
    * Дополнительный css-класс
    */
   className?: string;
+  classes?: {
+    content?: string;
+  };
   variant?: MessageVariant;
   placement?: MessagePlacement;
   children?: string;
@@ -28,6 +31,7 @@ export const Message: FC<MessageProps> = (props) => {
   const {
     children,
     className,
+    classes,
     variant = MessageVariant.primary,
     placement = MessagePlacement.right,
     title,
@@ -39,7 +43,7 @@ export const Message: FC<MessageProps> = (props) => {
       className={clsx(s.Message, s[`Message_variant_${variant}`], s[`Message_type_${placement}`], className)}
       ref={contentRef}>
       {title && <div className={s.Message__title} dangerouslySetInnerHTML={{ __html: `${title}<br /><br />` }} />}
-      <div dangerouslySetInnerHTML={{ __html: children || '' }} />
+      <div className={classes?.content} dangerouslySetInnerHTML={{ __html: children || '' }} />
     </div>
   );
 };

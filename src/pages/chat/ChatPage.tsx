@@ -14,6 +14,8 @@ import { Button, ButtonSize, ButtonVariant } from '../../components/Button';
 import { useSingleTimeout } from '../../hooks/useSingleTimeout';
 import { MessageType } from '../../api/chat/types';
 import { BACKEND_URL } from '../../config';
+import { useHint } from '../../api/chat';
+import { useDebounceCallback } from '../../hooks/useDebounceCallback';
 
 const normalizeText = (rawText: string, keepNewline = true) => {
   return rawText
@@ -29,30 +31,48 @@ export const ChatPage: ReactFCC = () => {
 
   const [value, setValue] = useState('');
 
-  const { messages, sendMessage, setMessages } = useChat({
+  const { messages, sendMessage, setMessages, isLoading } = useChat({
     token,
     initialMessages: [
       {
         type: MessageType.them,
-        text: `Здравствуйте! <br /> Сотрудники службы информационной поддержки Портала поставщиков ответят на вопросы о работе системы, окажут помощь в получении и поиске информации на портале.`,
+        text: `Здравствуйте! <br /> Информационная система Портала поставщиков поможет с вопросами о работе системы, окажет помощь в получении и поиске информации на портале.`,
         active: 0
       },
       {
         type: MessageType.them,
-        text: `Выберите, пожалуйста, тему обращения:`,
+        text: `Введите ваш запрос или выберете из частозадаваемых:`,
         active: 0,
         hints: [
           'Как определяется победитель тендера',
           'Как создать оферту',
           'Как найти товар',
           'Сколько по времени идет котировочная сессия',
-          'Срок продолжительности котировочной сессии',
-          'Как вернуть оферту из архива?',
-          'Требования к рабочему месту пользователя уполномоченного органа'
+          'Как вернуть оферту из архива?'
         ]
       }
     ]
   });
+
+  const { data: hintData, refetch: fetchHint } = useHint({
+    query: value,
+    config: {
+      enabled: value.trim().split(' ').length >= 3,
+      keepPreviousData: true
+    }
+  });
+
+  const handleUpdateValue = useDebounceCallback(() => {
+    if (value.trim().split(' ').length >= 3) {
+      fetchHint();
+    }
+  }, 500);
+
+  useEffect(() => {
+    handleUpdateValue();
+  }, [value]);
+
+  const inputHints = hintData?.map((i) => normalizeText(i.answer, false)) || [];
 
   const timeout = useSingleTimeout();
 
@@ -157,13 +177,27 @@ export const ChatPage: ReactFCC = () => {
                   title = `<span class="hintText" style="background-color: var(--accent-light)" data-value="${score}">${title}</span>`;
                 } else {
                   text =
-                    text.slice(0, entry) +
+                    text.slice(0, entry + 1) +
                     `<span class="hintText" style="background-color: var(--accent-light)" data-value="${score}">${text.slice(
-                      entry,
+                      entry + 1,
                       entry_ends
                     )}</span>` +
                     text.slice(entry_ends);
                 }
+              }
+
+              if (item?.type === 'file') {
+                title = title.replaceAll('.', ' > ');
+                const fileText = normalizeText(
+                  item.file_text
+                    ? item.file_text.length > 1000
+                      ? item.file_text.slice(0, 1000) + '...'
+                      : item.file_text
+                    : ''
+                );
+                text = `${fileText} <br /><br /> <a href="${
+                  BACKEND_URL + item.file
+                }" target="_blank">Открыть подробный документ</a>`;
               }
             }
 
@@ -210,42 +244,32 @@ export const ChatPage: ReactFCC = () => {
 
                   {message.type === MessageType.them && hints.length !== 0 && messageIndex === length - 1 && (
                     <div className={s.ChatPage__hintContainer}>
-                      {hints.map((hint, index) => {
+                      {hints.slice(0, 5).map((hint, index) => {
                         const file = message.data?.[index];
                         const isFile = file?.type === 'file';
 
                         return (
                           <Button
-                            component={isFile ? 'a' : undefined}
-                            {...(isFile
-                              ? {
-                                  href: BACKEND_URL + file?.file,
-                                  download: file?.title + '.pdf',
-                                  target: '_black'
-                                }
-                              : {})}
                             className={s.ChatPage__hint}
                             classes={{ text: s.ChatPage__hintText }}
                             variant={index === message.active ? ButtonVariant.primary : ButtonVariant.tertiary}
                             size={ButtonSize.small_x}
                             key={index}
                             onClick={(e: MouseEvent) => {
-                              if (!isFile) {
-                                e.preventDefault();
-                                const messageIndex = messages.findIndex((i) => i === message);
-                                setMessages((msgs) => [
-                                  ...msgs.slice(0, messageIndex),
-                                  { ...message, active: index },
-                                  ...msgs.slice(messageIndex + 1)
-                                ]);
-                              }
+                              e.preventDefault();
+                              const messageIndex = messages.findIndex((i) => i === message);
+                              setMessages((msgs) => [
+                                ...msgs.slice(0, messageIndex),
+                                { ...message, active: index },
+                                ...msgs.slice(messageIndex + 1)
+                              ]);
                             }}
                             disabled={messageIndex !== length - 1 || index === message.active}
                             title={hint}>
                             {normalizeText(
                               (isFile ? '[PDF] ' : '') + (hint.length > 100 ? hint.slice(0, 100) + '...' : hint),
                               false
-                            )}
+                            ).replaceAll('.', ' > ')}
                           </Button>
                         );
                       })}
@@ -255,6 +279,21 @@ export const ChatPage: ReactFCC = () => {
               )
             );
           })}
+
+          {isLoading && (
+            <MessageContainer
+              className={clsx('message', s.ChatPage__messageContainer_left)}
+              placement={MessagePlacement.left}
+              loaded>
+              <Message
+                className={clsx(s.ChatPage__message, s.ChatPage__message_loading)}
+                classes={{ content: s.ChatPage__messageLoadingContent }}
+                variant={MessageVariant.secondary}
+                placement={MessagePlacement.left}>
+                {`<div></div><div></div><div></div>`}
+              </Message>
+            </MessageContainer>
+          )}
         </div>
         <div className={s.ChatPage__textTip} ref={tipRef} />
       </div>
@@ -266,9 +305,8 @@ export const ChatPage: ReactFCC = () => {
             setValue={setValue}
             onSubmit={onSubmit}
             inputRef={inputRef}
-            buttonDisabled={value === ''}
-            // inputHints={['Страница контракта организации']}
-            onClickHint={(hint) => onSubmit(hint)}
+            disabled={isLoading || value === ''}
+            inputHints={inputHints}
           />
         </Container>
       </div>

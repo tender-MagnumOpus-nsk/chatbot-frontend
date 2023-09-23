@@ -63,6 +63,10 @@
     background-color: $color-button-secondary-hover-fill;
   }
 
+  &.ChatInput__dropdownItem_hovered {
+    background-color: $color-button-secondary-hover-fill;
+  }
+
   &:active {
     background-color: $color-button-secondary-pressed-fill;
   }

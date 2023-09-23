@@ -14,7 +14,7 @@ export const useChat = (props: UseChatProps) => {
 
   const [messages, setMessages] = useState<IMessage[]>([]);
 
-  const { data, isLoading, isFetched } = useGetChat({
+  const { data } = useGetChat({
     token: token || '',
     config: {
       enabled: !!token
@@ -42,11 +42,15 @@ export const useChat = (props: UseChatProps) => {
     }
   }, [data]);
 
-  const { sendMessage: sendSocketMessage } = useSocket({
+  const {
+    sendMessage: sendSocketMessage,
+    error,
+    isLoading
+  } = useSocket({
     url: token ? WS_URL + '/messages/' + token : '',
     enabled: !!token,
     onMessage: (data: ChatResponse) => {
-      console.log(data);
+      console.log('Socket data received:', data);
       let message: IMessage;
       if (data.data?.length) {
         message = { ...data, type: MessageType.them, active: 0 } as IMessage;
@@ -67,7 +71,6 @@ export const useChat = (props: UseChatProps) => {
     messages,
     sendMessage,
     setMessages,
-    isLoading,
-    isFetched
+    isLoading
   };
 };

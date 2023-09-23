@@ -1,4 +1,4 @@
-import React, { Dispatch, MouseEvent, SetStateAction, useRef, useState } from 'react';
+import React, { Dispatch, MouseEvent, SetStateAction, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import s from './ChatInput.module.scss';
 import { ReactFCC } from '../../../../utils/ReactFCC';
@@ -16,24 +16,40 @@ export interface InputProps {
   className?: string;
   value: string;
   setValue: Dispatch<SetStateAction<string>>;
-  onSubmit: () => void;
+  onSubmit: (value?: string) => void;
   inputRef?: React.Ref<HTMLTextAreaElement>;
-  buttonDisabled?: boolean;
+  disabled?: boolean;
   inputHints?: string[];
-  onClickHint?: (hint: string) => void;
 }
 
 export const ChatInput: ReactFCC<InputProps> = (props) => {
-  const { className, value, setValue, onSubmit, inputRef, buttonDisabled, inputHints, onClickHint } = props;
+  const { className, value, setValue, onSubmit, inputRef, disabled, inputHints } = props;
 
+  const [activeHint, setActiveHint] = useState(-1);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    setActiveHint(-1);
+  }, [inputHints, dropdownVisible]);
 
   useClickOutside({
     ref: containerRef,
     callback: () => setDropdownVisible(false),
     isWithKeyEsc: true
   });
+
+  const paginate = (amount: 1 | -1) => {
+    setActiveHint((currentHint) => {
+      let index = currentHint + amount;
+      if (index >= (inputHints?.length || 0)) {
+        index = 0;
+      } else if (index < 0) {
+        index = inputHints?.length ? inputHints.length - 1 : 0;
+      }
+      return index;
+    });
+  };
 
   return (
     <div className={s.ChatInput__container} ref={containerRef}>
@@ -46,11 +62,28 @@ export const ChatInput: ReactFCC<InputProps> = (props) => {
         onKeyDown={(e) => {
           if (isKey(e.nativeEvent, Key.Enter) && !e.shiftKey) {
             e.preventDefault();
-            onSubmit();
+
+            if (disabled) {
+              return;
+            }
+
+            if (activeHint !== -1 && inputHints && inputHints[activeHint]) {
+              onSubmit(inputHints[activeHint]);
+            } else {
+              onSubmit();
+            }
+          }
+
+          if (isKey(e.nativeEvent, [Key.ArrowUp, Key.ArrowDown])) {
+            e.preventDefault();
+            paginate(isKey(e.nativeEvent, Key.ArrowDown) ? 1 : -1);
           }
         }}
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e) => {
+          setValue(e.target.value);
+          setDropdownVisible(true);
+        }}
         inputRef={inputRef}
         right={
           <Button
@@ -61,7 +94,7 @@ export const ChatInput: ReactFCC<InputProps> = (props) => {
               e.stopPropagation();
               onSubmit();
             }}
-            disabled={buttonDisabled}>
+            disabled={disabled}>
             <SendIcon className={s.ChatInput__icon} />
           </Button>
         }
@@ -73,16 +106,19 @@ export const ChatInput: ReactFCC<InputProps> = (props) => {
         <div className={clsx(s.ChatInput__dropdown)} onClick={(e) => e.stopPropagation()}>
           {inputHints.map((hint, index) => (
             <button
-              className={s.ChatInput__dropdownItem}
+              className={clsx(s.ChatInput__dropdownItem, {
+                [s.ChatInput__dropdownItem_hovered]: activeHint === index
+              })}
               key={index}
               onClick={(e) => {
                 e.preventDefault();
-                onClickHint?.(hint);
-              }}>
+                onSubmit(hint);
+              }}
+              onMouseOver={() => setActiveHint(index)}
+              title={hint}>
               {hint}
             </button>
           ))}
-          {/*<button className={s.ChatInput__dropdownItem}>Подсказка при введении текста 2</button>*/}
         </div>
       )}
     </div>
