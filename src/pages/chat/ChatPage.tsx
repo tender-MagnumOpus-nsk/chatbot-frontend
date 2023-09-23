@@ -177,11 +177,10 @@ export const ChatPage: ReactFCC = () => {
                   title = `<span class="hintText" style="background-color: var(--accent-light)" data-value="${score}">${title}</span>`;
                 } else {
                   text =
-                    text.slice(0, entry + 1) +
-                    `<span class="hintText" style="background-color: var(--accent-light)" data-value="${score}">${text.slice(
-                      entry + 1,
-                      entry_ends
-                    )}</span>` +
+                    text.slice(0, entry) +
+                    `<span class="hintText" style="background-color: var(--accent-light)" data-value="${score}">${text
+                      .slice(entry, entry_ends)
+                      .trim()}</span>` +
                     text.slice(entry_ends);
                 }
               }
