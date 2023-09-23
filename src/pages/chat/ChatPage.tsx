@@ -185,25 +185,28 @@ export const ChatPage: ReactFCC = () => {
                     {normalizeText(text)}
                   </Message>
 
-                  {message.type === MessageType.them && message.hints && message.hints.length !== 0 && (
-                    <div className={s.ChatPage__hintContainer}>
-                      {message.hints.map((hint, index) => (
-                        <Button
-                          className={s.ChatPage__hint}
-                          classes={{ text: s.ChatPage__hintText }}
-                          variant={ButtonVariant.tertiary}
-                          size={ButtonSize.small_x}
-                          key={index}
-                          onClick={(e: MouseEvent) => {
-                            e.preventDefault();
-                            onSubmit(hint);
-                          }}
-                          disabled={messageIndex !== length - 1}>
-                          {hint}
-                        </Button>
-                      ))}
-                    </div>
-                  )}
+                  {message.type === MessageType.them &&
+                    message.hints &&
+                    message.hints.length !== 0 &&
+                    messageIndex === length - 1 && (
+                      <div className={s.ChatPage__hintContainer}>
+                        {message.hints.map((hint, index) => (
+                          <Button
+                            className={s.ChatPage__hint}
+                            classes={{ text: s.ChatPage__hintText }}
+                            variant={ButtonVariant.tertiary}
+                            size={ButtonSize.small_x}
+                            key={index}
+                            onClick={(e: MouseEvent) => {
+                              e.preventDefault();
+                              onSubmit(hint);
+                            }}
+                            disabled={messageIndex !== length - 1}>
+                            {hint}
+                          </Button>
+                        ))}
+                      </div>
+                    )}
 
                   {message.type === MessageType.them && hints.length !== 0 && messageIndex === length - 1 && (
                     <div className={s.ChatPage__hintContainer}>
