@@ -76,14 +76,14 @@ export const ChatPage: ReactFCC = () => {
 
       <div className={s.ChatPage__content}>
         <div className={s.ChatPage__contentInner}>
-          {messages.map((message, index) => (
+          {messages.map((message, messageIndex, { length }) => (
             <MessageContainer
               className={clsx('message', {
                 [s.ChatPage__messageContainer_right]: message.type === MessageType.me,
                 [s.ChatPage__messageContainer_left]: message.type === MessageType.them
               })}
               type={message.type === MessageType.me ? MessageComponentType.right : MessageComponentType.left}
-              key={index}>
+              key={messageIndex}>
               <Message
                 className={s.ChatPage__message}
                 variant={message.type === MessageType.me ? MessageVariant.primary : MessageVariant.secondary}
@@ -103,7 +103,8 @@ export const ChatPage: ReactFCC = () => {
                       onClick={(e: MouseEvent) => {
                         e.preventDefault();
                         onSubmit(hint);
-                      }}>
+                      }}
+                      disabled={messageIndex !== length - 1}>
                       {hint}
                     </Button>
                   ))}

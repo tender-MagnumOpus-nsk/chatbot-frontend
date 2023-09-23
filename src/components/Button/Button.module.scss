@@ -172,7 +172,8 @@ $button-box-shadow-sizes: 0 20px 80px -20px;
   }
 
   &.Button_disabled {
-    color: $color-text-tertiary;
+    border-color: $color-button-primary-disabled-fill;
+    color: $color-brand-disabled;
   }
 }
 
