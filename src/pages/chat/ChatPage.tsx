@@ -13,12 +13,11 @@ import { useChat } from './hooks';
 import { Button, ButtonSize, ButtonVariant } from '../../components/Button';
 import { useSingleTimeout } from '../../hooks/useSingleTimeout';
 import { MessageType } from '../../api/chat/types';
-import { usePrevious } from '../../hooks/usePrevious';
 
-const normalizeText = (rawText: string) => {
+const normalizeText = (rawText: string, keepNewline = true) => {
   return rawText
     .trim()
-    .replaceAll(/(\n ?)/gm, '<br />')
+    .replaceAll(/(\n ?)/gm, keepNewline ? '<br />' : ' ')
     .replaceAll(/(<br \/>[  ]?){2,}/gm, '<br /><br />')
     .replaceAll(/(  ?){2,}/gm, ' ')
     .replaceAll('&quot;', '"');
@@ -228,7 +227,7 @@ export const ChatPage: ReactFCC = () => {
                           }}
                           disabled={messageIndex !== length - 1 || index === message.active}
                           title={hint}>
-                          {normalizeText(hint.length > 100 ? hint.slice(0, 100) + '...' : hint)}
+                          {normalizeText(hint.length > 100 ? hint.slice(0, 100) + '...' : hint, false)}
                         </Button>
                       ))}
                     </div>
