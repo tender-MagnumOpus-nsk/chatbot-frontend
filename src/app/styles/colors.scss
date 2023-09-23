@@ -42,11 +42,16 @@ $color-background-dark-400: darken($color-background, 24%);
 $color-background-dark-500: darken($color-background, 48%);
 
 $color-background-accent: $color-primary;
+$color-background-accent-light: color.adjust($color-primary, $saturation: -30%, $lightness: 30%);
 $color-background-accent-100: color.adjust($color-accent, $saturation: -40%, $lightness: 40%);
 $color-background-accent-200: color.adjust($color-accent, $saturation: -30%, $lightness: 30%);
 $color-background-accent-300: color.adjust($color-accent, $saturation: -20%, $lightness: 20%);
 $color-background-accent-400: color.adjust($color-accent, $saturation: -10%, $lightness: 10%);
 $color-background-accent-500: $color-background-accent;
+
+:root {
+  --accent-light: #{$color-background-accent-light};
+}
 
 $color-text-primary: $color-text;
 $color-text-secondary: darken($color-background, 40%);

@@ -93,3 +93,29 @@
     max-width: 100%;
   }
 }
+
+.ChatPage__hint {
+  overflow: hidden;
+}
+
+.ChatPage__hintText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ChatPage__textTip {
+  @include transition(opacity);
+  @include text-body-s-regular;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  opacity: 0;
+  padding: 8px 12px;
+  border-radius: $radius-medium;
+  background-color: rgba($color-text-primary, 0.9);
+  color: $color-background-primary;
+  transform: translateY(-50%);
+}

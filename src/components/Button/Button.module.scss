@@ -122,7 +122,6 @@ $button-box-shadow-sizes: 0 20px 80px -20px;
   &.Button_hovered,
   &:hover {
     background-color: $color-button-primary-hover-fill;
-    //box-shadow: #{$button-box-shadow-sizes} $color-brand-primary;
   }
 
   &:active {
@@ -130,9 +129,8 @@ $button-box-shadow-sizes: 0 20px 80px -20px;
   }
 
   &.Button_disabled {
-    color: $color-text-secondary;
-    background-color: transparent;
-    //background-color: $color-brand-disabled;
+    color: $color-text-invert;
+    background-color: $color-button-primary-default-fill;
   }
 }
 

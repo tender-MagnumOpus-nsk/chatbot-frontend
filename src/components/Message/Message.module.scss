@@ -98,3 +98,7 @@ $message-radius: $radius-large-xx;
     background-color: $color-background-primary;
   }
 }
+
+.Message__title {
+  @include text-body-m-medium;
+}

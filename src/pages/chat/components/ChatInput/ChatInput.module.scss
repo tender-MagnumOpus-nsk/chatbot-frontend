@@ -22,6 +22,11 @@
   height: 32px !important;
   padding: 0 !important;
   align-self: flex-end;
+
+  &:disabled {
+    background-color: transparent !important;
+    color: $color-secondary !important;
+  }
 }
 
 .ChatInput__icon {

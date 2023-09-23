@@ -1,13 +1,13 @@
 import clsx from 'clsx';
 import s from './Message.module.scss';
-import { FC, useEffect, useState } from 'react';
+import { FC, RefObject } from 'react';
 
 export enum MessageVariant {
   primary = 'primary',
   secondary = 'secondary'
 }
 
-export enum MessageType {
+export enum MessagePlacement {
   right = 'right',
   left = 'left'
 }
@@ -18,25 +18,28 @@ export interface MessageProps {
    */
   className?: string;
   variant?: MessageVariant;
-  type?: MessageType;
+  placement?: MessagePlacement;
   children?: string;
+  title?: string;
+  contentRef?: RefObject<HTMLDivElement>;
 }
 
 export const Message: FC<MessageProps> = (props) => {
-  const { children, className, variant = MessageVariant.primary, type = MessageType.right } = props;
-
-  const [mounted, setMounted] = useState(false);
-  //
-  // useEffect(() => {
-  //   setMounted(true);
-  // }, []);
+  const {
+    children,
+    className,
+    variant = MessageVariant.primary,
+    placement = MessagePlacement.right,
+    title,
+    contentRef
+  } = props;
 
   return (
     <div
-      className={clsx(s.Message, s[`Message_variant_${variant}`], s[`Message_type_${type}`], className, {
-        [s.Message_mounted]: mounted
-      })}
-      dangerouslySetInnerHTML={{ __html: children || '' }}
-    />
+      className={clsx(s.Message, s[`Message_variant_${variant}`], s[`Message_type_${placement}`], className)}
+      ref={contentRef}>
+      {title && <div className={s.Message__title} dangerouslySetInnerHTML={{ __html: `${title}<br /><br />` }} />}
+      <div dangerouslySetInnerHTML={{ __html: children || '' }} />
+    </div>
   );
 };

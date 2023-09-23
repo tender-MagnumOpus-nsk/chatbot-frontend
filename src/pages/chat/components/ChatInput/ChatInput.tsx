@@ -3,11 +3,10 @@ import clsx from 'clsx';
 import s from './ChatInput.module.scss';
 import { ReactFCC } from '../../../../utils/ReactFCC';
 import { Textarea } from '../../../../components/Textarea';
-import { Button } from '../../../../components/Button';
+import { Button, ButtonVariant } from '../../../../components/Button';
 import { ReactComponent as SendIcon } from './send.svg';
 import { isKey } from '../../../../utils/isKey';
 import { Key } from 'ts-key-enum';
-import { useFocus } from '../../../../hooks/useFocus';
 import { useClickOutside } from '../../../../hooks/useClickOutside';
 
 export interface InputProps {
@@ -56,6 +55,7 @@ export const ChatInput: ReactFCC<InputProps> = (props) => {
         right={
           <Button
             className={s.ChatInput__button}
+            variant={ButtonVariant.primary}
             onClick={(e: MouseEvent) => {
               e.preventDefault();
               e.stopPropagation();
